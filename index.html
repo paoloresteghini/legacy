@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Training | Fuel Your Legacy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lime: '#ceff00',
+                        dark: '#0a0a0a',
+                        muted: '#6b7280',
+                        light: '#f7f7f7',
+                    },
+                    fontFamily: {
+                        'display': ['Sora', 'sans-serif'],
+                        'body': ['Open Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .font-display {
+            font-family: 'Sora', sans-serif;
+        }
+        
+        /* Minimal animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .fade-up-delay-1 { animation-delay: 0.1s; }
+        .fade-up-delay-2 { animation-delay: 0.2s; }
+        .fade-up-delay-3 { animation-delay: 0.3s; }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scroll-triggered animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Stagger children */
+        .stagger-children .reveal:nth-child(1) { transition-delay: 0s; }
+        .stagger-children .reveal:nth-child(2) { transition-delay: 0.1s; }
+        .stagger-children .reveal:nth-child(3) { transition-delay: 0.2s; }
+        .stagger-children .reveal:nth-child(4) { transition-delay: 0.3s; }
+        .stagger-children .reveal:nth-child(5) { transition-delay: 0.4s; }
+        .stagger-children .reveal:nth-child(6) { transition-delay: 0.5s; }
+        
+        /* Hover lift */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        /* Link underline animation */
+        .link-underline {
+            position: relative;
+        }
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ceff00;
+            transition: width 0.3s ease;
+        }
+        .link-underline:hover::after {
+            width: 100%;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Selection color */
+        ::selection {
+            background: #ceff00;
+            color: #0a0a0a;
+        }
+        
+        /* Supersized Hero Headline - large */
+        .hero-headline {
+            font-size: clamp(3.75rem, 15vw, 11.25rem);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+        }
+        
+        /* Text reveal animation */
+        .text-reveal {
+            overflow: hidden;
+        }
+        .text-reveal span {
+            display: inline-block;
+            transform: translateY(100%);
+            animation: textReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .text-reveal-delay span {
+            animation-delay: 0.15s;
+        }
+        
+        @keyframes textReveal {
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        /* Lime highlight with subtle pulse */
+        .lime-glow {
+            background: #ceff00;
+            box-shadow: 0 0 60px rgba(206, 255, 0, 0.3);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 60px rgba(206, 255, 0, 0.3); }
+            50% { box-shadow: 0 0 80px rgba(206, 255, 0, 0.5); }
+        }
+        
+        /* Counter animation */
+        .counter {
+            display: inline-block;
+        }
+        
+        /* Gradient line */
+        .gradient-line {
+            height: 3px;
+            background: linear-gradient(90deg, #ceff00 0%, transparent 100%);
+            width: 0;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gradient-line.visible {
+            width: 100px;
+        }
+        
+        /* Image zoom on scroll */
+        .zoom-on-scroll {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .zoom-on-scroll.visible {
+            transform: scale(1.05);
+        }
+        
+        /* Accordion icon rotation */
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.rotate-45 {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-white text-dark">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-light">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="font-display font-bold text-xl tracking-tight">
+                    Legacy Training
+                </a>
+                
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="#about" class="text-muted hover:text-dark transition-colors text-sm font-medium link-underline">Why Legacy</a>
+                    <a href="#approach" class="text-muted hover:text-dark transition-colors text-sm font-medium link-underline">Approach</a>
+                    <a href="#services" class="text-muted hover:text-dark transition-colors text-sm font-medium link-underline">Services</a>
+                    <a href="#team" class="text-muted hover:text-dark transition-colors text-sm font-medium link-underline">Team</a>
+                    <a href="#contact" class="bg-lime text-dark px-6 py-3 text-sm font-semibold hover:bg-dark hover:text-lime transition-colors">
+                        Get Started
+                    </a>
+                </div>
+                
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-light">
+            <div class="px-6 py-6 space-y-4">
+                <a href="#about" class="block text-dark font-medium py-2">Why Legacy</a>
+                <a href="#approach" class="block text-dark font-medium py-2">Approach</a>
+                <a href="#services" class="block text-dark font-medium py-2">Services</a>
+                <a href="#team" class="block text-dark font-medium py-2">Team</a>
+                <a href="#contact" class="block bg-lime text-dark px-6 py-3 text-center font-semibold mt-4">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-28 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <p class="text-sm font-medium text-muted mb-6 tracking-wide uppercase fade-up">Nutrition · Fitness · Lifestyle</p>
+            
+            <div class="relative">
+                <!-- Image - positioned on the right -->
+                <div class="lg:absolute lg:right-0 lg:top-0 lg:w-[45%] fade-up fade-up-delay-2">
+                    <div class="aspect-[4/5] bg-light overflow-hidden">
+                        <img src="https://images.squarespace-cdn.com/content/v1/6930ab650ccf2c787d96f1a5/3861931d-f103-4261-b69a-cb8cb80bf0ec/IMG_5165.jpg?format=1500w" 
+                             alt="Legacy Training coaches" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 bg-lime p-6 z-20">
+                        <p class="font-display font-bold text-3xl text-dark">100%</p>
+                        <p class="text-sm text-dark/70">Personalized</p>
+                    </div>
+                </div>
+                
+                <!-- Supersized Headline - overlaps image -->
+                <div class="relative z-10 lg:w-[75%] pt-8 lg:pt-0">
+                    <h1 class="font-display font-extrabold hero-headline">
+                        <div class="text-reveal">
+                            <span>Fuel Your</span>
+                        </div>
+                        <div class="text-reveal text-reveal-delay">
+                            <span class="inline-block lime-glow px-4 lg:px-6">Legacy.</span>
+                        </div>
+                    </h1>
+                </div>
+                
+                <!-- Content below headline -->
+                <div class="relative z-10 lg:w-[50%] mt-12 lg:mt-16 fade-up fade-up-delay-3">
+                    <p class="text-lg text-muted max-w-md mb-8 leading-relaxed">
+                        Personalized coaching designed to build strong, sustainable health. No quick fixes—just lasting transformation.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#contact" class="bg-dark text-white px-8 py-4 font-semibold hover:bg-lime hover:text-dark transition-colors">
+                            Start Your Journey
+                        </a>
+                        <a href="#about" class="border border-dark text-dark px-8 py-4 font-semibold hover:bg-dark hover:text-white transition-colors">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section id="about" class="py-24 bg-light">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
+                <!-- Left: Intro -->
+                <div class="lg:sticky lg:top-32 lg:self-start">
+                    <p class="text-sm font-medium text-muted mb-6 tracking-wide uppercase reveal">Our Values</p>
+                    
+                    <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-8 reveal">
+                        Guiding every<br><span class="bg-lime px-2">step</span> we take.
+                    </h2>
+                    
+                    <p class="text-lg text-muted leading-relaxed reveal">
+                        Our mission is to make nutrition, fitness, and healthy living 
+                        <strong class="text-dark">accessible</strong>, 
+                        <strong class="text-dark">intentional</strong>, and 
+                        <strong class="text-dark">sustainable</strong>.
+                    </p>
+                    <p class="text-lg text-muted leading-relaxed mt-4 reveal">
+                        These values guide the way we coach, support, and empower our clients to pursue <span class="bg-lime/50 px-1">lifelong health</span>.
+                    </p>
+                </div>
+                
+                <!-- Right: Accordion -->
+                <div class="space-y-0 reveal">
+                    <!-- Stewardship -->
+                    <div class="accordion-item border-t border-dark/10">
+                        <button class="accordion-trigger w-full py-6 flex items-center justify-between text-left group" onclick="toggleAccordion(this)">
+                            <span class="font-display font-bold text-xl md:text-2xl group-hover:text-lime transition-colors">STEWARDSHIP</span>
+                            <span class="accordion-icon w-8 h-8 flex items-center justify-center border border-dark/20 transition-transform duration-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-out">
+                            <p class="pb-6 text-muted leading-relaxed pr-12">
+                                We believe in caring for our bodies with intention and gratitude — recognizing health as something to be cultivated, not taken for granted.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Empowerment -->
+                    <div class="accordion-item border-t border-dark/10">
+                        <button class="accordion-trigger w-full py-6 flex items-center justify-between text-left group" onclick="toggleAccordion(this)">
+                            <span class="font-display font-bold text-xl md:text-2xl group-hover:text-lime transition-colors">EMPOWERMENT</span>
+                            <span class="accordion-icon w-8 h-8 flex items-center justify-center border border-dark/20 transition-transform duration-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-out">
+                            <p class="pb-6 text-muted leading-relaxed pr-12">
+                                We lead with guidance, not dependency. Our role is to educate and coach — helping you build the skills and confidence to make informed choices long term.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Consistency -->
+                    <div class="accordion-item border-t border-dark/10">
+                        <button class="accordion-trigger w-full py-6 flex items-center justify-between text-left group" onclick="toggleAccordion(this)">
+                            <span class="font-display font-bold text-xl md:text-2xl group-hover:text-lime transition-colors">CONSISTENCY</span>
+                            <span class="accordion-icon w-8 h-8 flex items-center justify-center border border-dark/20 transition-transform duration-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-out">
+                            <p class="pb-6 text-muted leading-relaxed pr-12">
+                                Progress is built on consistency and <strong class="text-dark">consistency builds legacy</strong>. We walk alongside you, providing honest feedback, encouragement, and accountability to help you stay committed.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Transformation -->
+                    <div class="accordion-item border-t border-dark/10 border-b">
+                        <button class="accordion-trigger w-full py-6 flex items-center justify-between text-left group" onclick="toggleAccordion(this)">
+                            <span class="font-display font-bold text-xl md:text-2xl group-hover:text-lime transition-colors">TRANSFORMATION</span>
+                            <span class="accordion-icon w-8 h-8 flex items-center justify-center border border-dark/20 transition-transform duration-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v12m6-6H6"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-out">
+                            <p class="pb-6 text-muted leading-relaxed pr-12">
+                                We focus on long-term transformation rooted in behavioral change — not shortcuts, quick fixes, or unsustainable extremes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Offer -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-6 stagger-children">
+                <div class="bg-light p-10 hover-lift reveal">
+                    <div class="w-12 h-12 bg-lime flex items-center justify-center mb-8">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-4">Nutrition</h3>
+                    <p class="text-muted leading-relaxed">
+                        Personalized nutrition guidance that fits your lifestyle. No restrictive diets—just sustainable fuel for your body.
+                    </p>
+                </div>
+                
+                <div class="bg-light p-10 hover-lift reveal">
+                    <div class="w-12 h-12 bg-lime flex items-center justify-center mb-8">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-4">Fitness</h3>
+                    <p class="text-muted leading-relaxed">
+                        Custom workout programs designed for your goals, schedule, and equipment. Train smarter, build strength that lasts.
+                    </p>
+                </div>
+                
+                <div class="bg-light p-10 hover-lift reveal">
+                    <div class="w-12 h-12 bg-lime flex items-center justify-center mb-8">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-2xl mb-4">Lifestyle</h3>
+                    <p class="text-muted leading-relaxed">
+                        Habit coaching that addresses sleep, stress, and daily routines. Because health is about how you live, not just how you train.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Approach -->
+    <section id="approach" class="py-24 bg-dark text-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <p class="text-sm font-medium text-white/50 mb-6 tracking-wide uppercase reveal">How It Works</p>
+                    
+                    <h2 class="font-display font-bold text-4xl md:text-5xl leading-[1.1] tracking-tight mb-12 reveal">
+                        Simple process.<br>
+                        <span class="text-lime">Real results.</span>
+                    </h2>
+                    
+                    <div class="space-y-10 stagger-children">
+                        <div class="flex gap-6 reveal">
+                            <div class="w-12 h-12 bg-lime text-dark flex items-center justify-center font-display font-bold text-lg flex-shrink-0">
+                                1
+                            </div>
+                            <div>
+                                <h3 class="font-display font-semibold text-xl mb-2">Assessment</h3>
+                                <p class="text-white/60 leading-relaxed">We learn about your goals, challenges, lifestyle, and health history to build your foundation.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-6 reveal">
+                            <div class="w-12 h-12 bg-lime text-dark flex items-center justify-center font-display font-bold text-lg flex-shrink-0">
+                                2
+                            </div>
+                            <div>
+                                <h3 class="font-display font-semibold text-xl mb-2">Custom Plan</h3>
+                                <p class="text-white/60 leading-relaxed">Receive tailored nutrition, fitness, and lifestyle strategies designed specifically for you.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-6 reveal">
+                            <div class="w-12 h-12 bg-lime text-dark flex items-center justify-center font-display font-bold text-lg flex-shrink-0">
+                                3
+                            </div>
+                            <div>
+                                <h3 class="font-display font-semibold text-xl mb-2">Ongoing Support</h3>
+                                <p class="text-white/60 leading-relaxed">Weekly check-ins, plan adjustments, and direct access to your coach. We're with you every step.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal-scale">
+                    <div class="aspect-square bg-white/5 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&h=600&fit=crop" 
+                             alt="Coaching session" 
+                             class="w-full h-full object-cover opacity-80">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="max-w-2xl mb-16">
+                <p class="text-sm font-medium text-muted mb-6 tracking-wide uppercase reveal">Our Services</p>
+                <h2 class="font-display font-bold text-4xl md:text-5xl leading-[1.1] tracking-tight mb-6 reveal">
+                    One size does <span class="bg-lime px-1">not</span> fit all.
+                </h2>
+                <p class="text-lg text-muted reveal">
+                    We tailor a plan based on your specific needs and desires. Choose the level of support that's right for your journey.
+                </p>
+            </div>
+            
+            <!-- Plans Grid -->
+            <div class="grid md:grid-cols-2 gap-6 mb-12">
+                
+                <!-- The Lifestyle Plan -->
+                <div class="border border-light p-8 lg:p-10 hover-lift">
+                    <h3 class="font-display font-bold text-2xl mb-2">The Lifestyle Plan</h3>
+                    <p class="text-muted mb-6 italic">A simple, approachable path to healthier eating, consistent fitness, and sustainable habits.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">30-minute nutrition + lifestyle strategy session</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Personalized macro and nutrition plan with monthly review</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">General fitness recommendations</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Practical food swaps + simple habit strategies</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Access to educational resources</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Weekly coaching call</span>
+                        </li>
+                    </ul>
+                    
+                    <p class="text-sm text-dark font-medium mb-6">Best for: Clients who want nutrition guidance, structure, and accountability without intensive coaching.</p>
+                    
+                    <a href="#contact" class="block border border-dark text-dark text-center px-6 py-4 font-semibold hover:bg-dark hover:text-white transition-colors">
+                        Get Pricing
+                    </a>
+                </div>
+                
+                <!-- The Essentials Plan -->
+                <div class="bg-dark text-white p-8 lg:p-10 hover-lift relative">
+                    <div class="absolute top-0 right-0 bg-lime text-dark text-xs font-semibold px-4 py-2">
+                        POPULAR
+                    </div>
+                    
+                    <h3 class="font-display font-bold text-2xl mb-2">The Essentials Plan</h3>
+                    <p class="text-white/60 mb-6 italic">A more tailored, hands-on path with strategic nutrition and fitness planning, ongoing adjustments, and steady support.</p>
+                    
+                    <p class="text-lime text-sm font-medium mb-4">Everything in Lifestyle, PLUS:</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">45-minute nutrition, fitness, + lifestyle strategy session</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">Custom fitness guidelines integrated with nutrition</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">Habit and lifestyle coaching (sleep, stress, recovery)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">Progress tracking (photos, measurements, InBody scans)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">Bi-weekly adjustments + 2x/week coaching calls</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-white/80">Unlimited messaging support</span>
+                        </li>
+                    </ul>
+                    
+                    <p class="text-sm text-white/80 font-medium mb-6">Best for: Clients who want hands-on accountability and fully customized plans for both nutrition and fitness.</p>
+                    
+                    <a href="#contact" class="block bg-lime text-dark text-center px-6 py-4 font-semibold hover:bg-white transition-colors">
+                        Get Pricing
+                    </a>
+                </div>
+                
+                <!-- The Performance Plan -->
+                <div class="border border-light p-8 lg:p-10 hover-lift">
+                    <h3 class="font-display font-bold text-2xl mb-2">The Performance Plan</h3>
+                    <p class="text-muted mb-6 italic">A full-service coaching experience where every detail is planned so you can focus on doing the work.</p>
+                    
+                    <p class="text-dark text-sm font-medium mb-4">Everything in Essentials, PLUS:</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">60-minute nutrition, fitness, + lifestyle strategy session</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Comprehensive meal-planning strategy and support</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Weekly meal plans and grocery lists</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Weekly performance-focused adjustments</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Priority messaging support</span>
+                        </li>
+                    </ul>
+                    
+                    <p class="text-sm text-dark font-medium mb-6">Best for: Athletes, busy professionals, or driven adults who want a clear structured plan without the guesswork.</p>
+                    
+                    <a href="#contact" class="block border border-dark text-dark text-center px-6 py-4 font-semibold hover:bg-dark hover:text-white transition-colors">
+                        Get Pricing
+                    </a>
+                </div>
+                
+                <!-- The Precision Health Plan -->
+                <div class="border-2 border-dark p-8 lg:p-10 hover-lift relative">
+                    <div class="absolute top-0 right-0 bg-dark text-white text-xs font-semibold px-4 py-2">
+                        PREMIUM
+                    </div>
+                    
+                    <h3 class="font-display font-bold text-2xl mb-2">The Precision Health Plan</h3>
+                    <p class="text-muted mb-6 italic">A whole-person, medically informed strategy that supports long-term health, performance, and vitality.</p>
+                    
+                    <p class="text-dark text-sm font-medium mb-4">Everything in Performance, PLUS:</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">90-minute medical, nutrition, fitness, + lifestyle session</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">In-person sessions offered within 1 hour of Sarasota</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Comprehensive health history assessment</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Lab review and biomarker interpretation</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Detailed medication review with lifestyle guidance</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Personalized supplement protocol</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Collaboration with physicians/specialists + quarterly lab reviews</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 bg-lime flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </span>
+                            <span class="text-muted">Priority messaging and real-time support</span>
+                        </li>
+                    </ul>
+                    
+                    <p class="text-sm text-dark font-medium mb-6">Best for: Clients with complex health needs or anyone wanting a clinically guided, premium experience with a physician.</p>
+                    
+                    <a href="#contact" class="block bg-dark text-white text-center px-6 py-4 font-semibold hover:bg-lime hover:text-dark transition-colors">
+                        Get Pricing
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Comparison Table -->
+            <div class="overflow-x-auto mb-12">
+                <p class="text-sm font-medium text-muted mb-6 tracking-wide uppercase text-center">Compare Our Plans</p>
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left p-4 border-2 border-dark font-display font-bold">Features</th>
+                            <th class="p-4 border-2 border-dark font-display font-bold text-center">Lifestyle</th>
+                            <th class="p-4 border-2 border-dark font-display font-bold text-center bg-lime/30">Essentials</th>
+                            <th class="p-4 border-2 border-dark font-display font-bold text-center">Performance</th>
+                            <th class="p-4 border-2 border-dark font-display font-bold text-center">Precision</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-muted">
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Personalized nutrition plan</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">General fitness recommendations</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Access to habit and lifestyle resources</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Coaching calls</td>
+                            <td class="p-4 border-2 border-dark text-center">1x/week</td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">2x/week</td>
+                            <td class="p-4 border-2 border-dark text-center">2x/week</td>
+                            <td class="p-4 border-2 border-dark text-center">2x/week</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Nutrition & fitness adjustments</td>
+                            <td class="p-4 border-2 border-dark text-center">Monthly</td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">Bi-weekly</td>
+                            <td class="p-4 border-2 border-dark text-center">Weekly</td>
+                            <td class="p-4 border-2 border-dark text-center">Weekly</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Custom fitness guidelines</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Habit and lifestyle coaching</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Progress tracking (photos, measurements, scans)</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Comprehensive meal-planning strategy</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10"></td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Weekly meal plans and grocery lists</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10"></td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Lab, medication & biomarker review</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10"></td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Personalized supplement protocol</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10"></td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-2 border-dark text-left">Physician collaboration</td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center bg-lime/10"></td>
+                            <td class="p-4 border-2 border-dark text-center"></td>
+                            <td class="p-4 border-2 border-dark text-center">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Compare Plans CTA -->
+            <div class="text-center">
+                <p class="text-muted">Not sure which plan is right for you? <a href="#contact" class="text-dark font-semibold link-underline">Get in touch</a> and we'll help you decide.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team" class="py-24 bg-light">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="max-w-2xl mb-16">
+                <p class="text-sm font-medium text-muted mb-6 tracking-wide uppercase reveal">Meet the Team</p>
+                <h2 class="font-display font-bold text-4xl md:text-5xl leading-[1.1] tracking-tight mb-6 reveal">
+                    We are <span class="bg-lime px-1">faith driven</span>, family centered, and dedicated to helping others.
+                </h2>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Ali -->
+                <div class="bg-white p-8 lg:p-10 hover-lift reveal-left">
+                    <div class="flex flex-col sm:flex-row gap-6 mb-6">
+                        <div class="w-32 h-32 bg-dark flex-shrink-0 flex items-center justify-center">
+                            <span class="text-lime font-display font-bold text-4xl">AK</span>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl mb-1">Dr. Ali Kassamali</h3>
+                            <p class="text-lime font-medium">Head Nutritionist</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-muted leading-relaxed">
+                        <p>
+                            Ali is a double board-certified physician with a background in Economics and Psychology from Emory University, post-baccalaureate studies at NYU, and medical training at the University of Miami Miller School of Medicine.
+                        </p>
+                        <p>
+                            After completing his residency in Anesthesiology and fellowship in Interventional Pain Management, he spent ten years treating patients with chronic pain and spine conditions. During those years, Ali saw just how many health issues could have been prevented with <strong class="text-dark">better nutrition, movement, and lifestyle habits</strong>.
+                        </p>
+                        <p>
+                            Today, Ali blends his medical expertise, experience as a certified trainer, and a deep understanding of physiology to design personalized fitness and nutrition programs for people of all ages and backgrounds—from athletes and busy parents to seniors working to improve their labs and quality of life.
+                        </p>
+                        <p class="text-dark font-medium">
+                            His goal is simple: empower clients to feel more confident, prevent chronic illness, and live healthier lives.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Lauren -->
+                <div class="bg-white p-8 lg:p-10 hover-lift reveal-right">
+                    <div class="flex flex-col sm:flex-row gap-6 mb-6">
+                        <div class="w-32 h-32 bg-dark flex-shrink-0 flex items-center justify-center">
+                            <span class="text-lime font-display font-bold text-4xl">LK</span>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl mb-1">Lauren Kassamali</h3>
+                            <p class="text-lime font-medium">Certified Trainer & Operations</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-muted leading-relaxed">
+                        <p>
+                            Lauren is a certified trainer with a lifelong love of fitness and a heart for helping people feel healthier and more confident. She earned her BSBA from the University of Florida in marketing, communications, and entrepreneurship.
+                        </p>
+                        <p>
+                            Her athletic background began at age three in a mom-and-tot gymnastics class and grew into a decade of competitive gymnastics, followed by cheerleading, diving, and eventually cheering at the University of Florida. As an adult, she found a new passion in CrossFit and the community it brought.
+                        </p>
+                        <p>
+                            Her health journey deepened at age 25, when a <strong class="text-dark">breast cancer diagnosis</strong> reshaped her view of the role nutrition plays in overall wellness.
+                        </p>
+                        <p class="text-dark font-medium">
+                            Today, Lauren channels her passion for health into the heart of Legacy Training's operations, client experience, and community building.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Testimonials -->
+    <section class="py-24 bg-dark text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                <!-- Left: Video Feature -->
+                <div class="relative reveal-scale">
+                    <!-- Main Video Thumbnail -->
+                    <div class="relative aspect-[4/3] bg-dark/50 overflow-hidden group cursor-pointer" onclick="playVideo(this)">
+                        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=600&fit=crop" 
+                             alt="Client transformation story" 
+                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                        
+                        <!-- Play Button -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-24 h-24 bg-lime flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-10 h-10 text-dark ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Duration Badge -->
+                        <div class="absolute bottom-4 right-4 bg-dark/80 px-3 py-1 text-sm font-medium">
+                            2:34
+                        </div>
+                        
+                        <!-- Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <!-- Floating Quote Card -->
+                    <div class="absolute -bottom-8 -right-4 lg:-right-8 bg-lime text-dark p-6 max-w-xs z-10 reveal">
+                        <svg class="w-8 h-8 mb-3 opacity-30" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                        <p class="font-display font-bold text-lg leading-snug">
+                            "This program changed my life"
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Right: Content -->
+                <div>
+                    <p class="text-sm font-medium text-white/50 mb-6 tracking-wide uppercase reveal">Success Stories</p>
+                    <h2 class="font-display font-bold text-4xl md:text-5xl leading-[1.1] tracking-tight mb-8 reveal">
+                        Watch their<br><span class="text-lime">transformations.</span>
+                    </h2>
+                    
+                    <p class="text-lg text-white/60 leading-relaxed mb-10 reveal">
+                        Real clients sharing real results. Hear how Legacy Training helped them build sustainable habits and transform their health.
+                    </p>
+                    
+                    <!-- Video Thumbnails Grid -->
+                    <div class="grid grid-cols-3 gap-4 stagger-children">
+                        <div class="relative aspect-square bg-white/5 overflow-hidden cursor-pointer group reveal" onclick="playVideo(this)">
+                            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop" 
+                                 alt="Sarah's story" 
+                                 class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-10 h-10 bg-lime flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-2 left-2 text-xs font-medium">Sarah</div>
+                        </div>
+                        
+                        <div class="relative aspect-square bg-white/5 overflow-hidden cursor-pointer group reveal" onclick="playVideo(this)">
+                            <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c149a?w=200&h=200&fit=crop" 
+                                 alt="Marcus's story" 
+                                 class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-10 h-10 bg-lime flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-2 left-2 text-xs font-medium">Marcus</div>
+                        </div>
+                        
+                        <div class="relative aspect-square bg-white/5 overflow-hidden cursor-pointer group reveal" onclick="playVideo(this)">
+                            <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=200&h=200&fit=crop" 
+                                 alt="Jamie's story" 
+                                 class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="w-10 h-10 bg-lime flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-2 left-2 text-xs font-medium">Jamie</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Row -->
+                    <div class="flex gap-12 mt-12 pt-8 border-t border-white/10 reveal">
+                        <div>
+                            <p class="font-display font-bold text-3xl text-lime">50+</p>
+                            <p class="text-sm text-white/50">Success Stories</p>
+                        </div>
+                        <div>
+                            <p class="font-display font-bold text-3xl text-lime">4.9</p>
+                            <p class="text-sm text-white/50">Average Rating</p>
+                        </div>
+                        <div>
+                            <p class="font-display font-bold text-3xl text-lime">92%</p>
+                            <p class="text-sm text-white/50">Goal Achievement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="py-24 bg-dark text-white">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+            <h2 class="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-8 reveal">
+                Ready to build<br>your <span class="text-lime">legacy</span>?
+            </h2>
+            
+            <p class="text-lg text-white/60 mb-12 max-w-xl mx-auto reveal">
+                Take the first step. Book a free consultation and let's create a plan that fits your life, your goals, and your future.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center reveal">
+                <a href="mailto:hello@legacy-training.com" class="bg-lime text-dark px-10 py-5 font-semibold text-lg hover:bg-white transition-colors">
+                    Book Free Consultation
+                </a>
+            </div>
+            
+            <p class="mt-8 text-white/40 text-sm reveal">
+                No commitment. Just a conversation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 border-t border-light">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 mb-12">
+                <div>
+                    <p class="font-display font-bold text-xl mb-4">Legacy Training</p>
+                    <p class="text-muted max-w-sm">
+                        Personalized nutrition, fitness, and lifestyle coaching designed to build strong, sustainable health.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:items-end">
+                    <p class="text-muted mb-4">Get in touch</p>
+                    <a href="mailto:hello@legacy-training.com" class="font-display font-semibold text-lg link-underline inline-block">
+                        hello@legacy-training.com
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-light">
+                <p class="text-sm text-muted">
+                    © 2025 Legacy Training. All rights reserved.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-muted hover:text-dark transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+        
+        // Close on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+        
+        // Accordion toggle
+        function toggleAccordion(btn) {
+            const item = btn.parentElement;
+            const content = item.querySelector('.accordion-content');
+            const icon = btn.querySelector('.accordion-icon');
+            const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+            
+            // Close all other accordions
+            document.querySelectorAll('.accordion-content').forEach(c => {
+                c.style.maxHeight = '0px';
+            });
+            document.querySelectorAll('.accordion-icon').forEach(i => {
+                i.classList.remove('rotate-45');
+            });
+            
+            // Toggle current
+            if (!isOpen) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.classList.add('rotate-45');
+            }
+        }
+        
+        // Video play placeholder
+        function playVideo(el) {
+            // In production, this would open a video modal or embed
+            alert('Video would play here. Replace with actual video embed.');
+        }
+        
+        // Scroll-triggered reveal animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .gradient-line').forEach(el => {
+            revealObserver.observe(el);
+        });
+        
+        // Nav background on scroll
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>
